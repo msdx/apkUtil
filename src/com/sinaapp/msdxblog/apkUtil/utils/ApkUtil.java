@@ -14,16 +14,15 @@ import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
 import com.sinaapp.msdxblog.apkUtil.entity.ApkInfo;
 import com.sinaapp.msdxblog.apkUtil.entity.ImpliedFeature;
@@ -98,6 +97,17 @@ public class ApkUtil {
         }
     }
 
+    public String getHdpiIcon(ApkInfo apkInfo) {
+        HashMap<String, String> icons = (HashMap<String, String>) apkInfo.getApplicationIcons();
+        for (String iconKey : ApkInfo.APPLICATIONS) {
+            String icon = icons.get(iconKey);
+            if (icon != null) {
+                return icon;
+            }
+        }
+        return null;
+    }
+
     /**
      * 保存apk的图标。
      * 
@@ -109,11 +119,8 @@ public class ApkUtil {
      *            保存的路径
      * @return 是否保存成功
      */
-    public boolean saveIcon(String apkPath, ApkInfo apkInfo, File file) {
-        if (apkInfo == null) {
-            throw new IllegalArgumentException("the apkInfo is null");
-        }
-        if (apkInfo.getApplicationIcon() == null) {
+    public boolean saveIcon(String apkPath, String iconPath, File file) {
+        if (iconPath == null) {
             return false;
         }
         ZipInputStream zis = null;
@@ -122,7 +129,7 @@ public class ApkUtil {
         try {
             ZipFile zipFile = new ZipFile(apkPath);
             zis = new ZipInputStream(new FileInputStream(apkPath));
-            ZipEntry icon = zipFile.getEntry(apkInfo.getApplicationIcon());
+            ZipEntry icon = zipFile.getEntry(iconPath);
             is = new BufferedInputStream(zipFile.getInputStream(icon));
             os = new BufferedOutputStream(new FileOutputStream(file));
             byte[] buf = new byte[1024];
@@ -254,7 +261,8 @@ public class ApkUtil {
             }
             ApkUtil apkUtil = new ApkUtil();
             ApkInfo apkInfo = apkUtil.getApkInfo(demo);
-            apkUtil.saveIcon(demo, apkInfo, new File("e:/icon.png"));
+//            apkUtil.saveIcon(demo, apkInfo.getApplicationIcon(), new File("e:/icon.png"));
+//            apkUtil.saveIcon(demo, apkUtil.getHdpiIcon(apkInfo), new File("e:/icon-hdpi.png"));
             System.out.println(apkInfo);
         } catch (Exception e) {
             e.printStackTrace();

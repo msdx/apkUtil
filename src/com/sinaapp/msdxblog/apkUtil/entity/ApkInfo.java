@@ -26,6 +26,8 @@ public class ApkInfo {
     public static final String APPLICATION_ICON_160 = "application-icon-160";
     public static final String APPLICATION_ICON_240 = "application-icon-240";
     public static final String APPLICATION_ICON_320 = "application-icon-320";
+    public static final String[] APPLICATIONS = { APPLICATION_ICON_320, APPLICATION_ICON_240,
+            APPLICATION_ICON_160, APPLICATION_ICON_120 };
     /**
      * apk内部版本号
      */
