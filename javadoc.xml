@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="javadoc">
+    <target name="javadoc">
+        <javadoc access="public" additionalparam="-encoding UTF-8 -charset UTF-8 " author="true" classpath="lib/jdom-1.1.2.jar;lib/AXMLPrinter2.jar;E:\eclipse\plugins\org.hamcrest.core_1.1.0.v20090501071000.jar;E:\eclipse\plugins\org.junit_4.8.2.v4_8_2_v20110321-1705\junit.jar" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" source="1.6" sourcefiles="src/com/sinaapp/msdxblog/apkUtil/utils/FileUtil.java,src/com/sinaapp/msdxblog/apkUtil/utils/AXMLPrinter.java,src/com/sinaapp/msdxblog/apkUtil/utils/ApkUtil.java,src/com/sinaapp/msdxblog/apkUtil/entity/ApkInfo.java" sourcepath="src;test" splitindex="true" use="true" version="true">
+            <link href="file:/E:/eclipse/workplace/androidUtil/doc/"/>
+        </javadoc>
+    </target>
+</project>
