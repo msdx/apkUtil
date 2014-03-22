@@ -8,12 +8,22 @@
  */
 package com.sinaapp.msdxblog.apkUtil.utils;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import com.sinaapp.msdxblog.apkUtil.entity.ApkInfo;
 import com.sinaapp.msdxblog.apkUtil.entity.ImpliedFeature;
@@ -90,18 +100,66 @@ public class ApkUtil {
 
     /**
      * 保存apk的图标。
-     * @param apkInfo apkInfo
-     * @param file 保存的路径
+     * 
+     * @param apkPath
+     *            apk的路径
+     * @param apkInfo
+     *            apkInfo
+     * @param file
+     *            保存的路径
+     * @return 是否保存成功
      */
-    public void saveIcon(ApkInfo apkInfo, File file) {
+    public boolean saveIcon(String apkPath, ApkInfo apkInfo, File file) {
         if (apkInfo == null) {
             throw new IllegalArgumentException("the apkInfo is null");
         }
         if (apkInfo.getApplicationIcon() == null) {
-            
+            return false;
         }
+        ZipInputStream zis = null;
+        InputStream is = null;
+        OutputStream os = null;
+        try {
+            ZipFile zipFile = new ZipFile(apkPath);
+            zis = new ZipInputStream(new FileInputStream(apkPath));
+            ZipEntry icon = zipFile.getEntry(apkInfo.getApplicationIcon());
+            is = new BufferedInputStream(zipFile.getInputStream(icon));
+            os = new BufferedOutputStream(new FileOutputStream(file));
+            byte[] buf = new byte[1024];
+            int length = 0;
+            while ((length = is.read(buf)) != -1) {
+                os.write(buf, 0, length);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (zis != null) {
+                try {
+                    zis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (os != null) {
+                try {
+                    os.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return true;
     }
-    
+
     /**
      * 设置APK的属性信息。
      * 
@@ -194,7 +252,9 @@ public class ApkUtil {
             if (args.length > 0) {
                 demo = args[0];
             }
-            ApkInfo apkInfo = new ApkUtil().getApkInfo(demo);
+            ApkUtil apkUtil = new ApkUtil();
+            ApkInfo apkInfo = apkUtil.getApkInfo(demo);
+            apkUtil.saveIcon(demo, apkInfo, new File("e:/icon.png"));
             System.out.println(apkInfo);
         } catch (Exception e) {
             e.printStackTrace();
