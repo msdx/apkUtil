@@ -4,6 +4,7 @@ apkUtil
 a tool run on Windows platform to get application info from a apk file.
 
 You can use it like this:
+
     try {
             String demo = "E:/androidApk/2012/05/百宝工具箱/1.0/signed/Toolbox-360.apk";
             if (args.length > 0) {
